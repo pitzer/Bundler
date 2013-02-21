@@ -1,17 +1,22 @@
 
-IF(NOT WIN32)
-find_package(JPEG)
-ENDIF(NOT WIN32)
-
 IF(WIN32)
-SET(JPEG_LIBRARY jpeg)
+  SET(JPEG_LIBRARY jpeg)
+ELSE(WIN32)
+  find_package(JPEG REQUIRED)
+  IF(APPLE)
+    find_path(JPEG_INCLUDE_DIR jpeglib.h PATH_SUFFIXES libjpeg)
+  ENDIF(APPLE)
 ENDIF(WIN32)
 
 IF(WIN32)
-SET(MATH_LIBS clapack cblas cminpack f2c)
+  SET(MATH_LIBS clapack cblas cminpack f2c)
 ELSE(WIN32)
-#Clapack stuff is not the same under unix system
-SET(MATH_LIBS lapack cblas cminpack -lgfortran)
+  IF(APPLE)
+    SET(MATH_LIBS cminpack -Wl,-framework -Wl,Accelerate)
+  ELSE(APPLE)
+    #Clapack stuff is not the same under unix system
+    SET(MATH_LIBS lapack cblas cminpack -lgfortran)
+  ENDIF(APPLE)
 ENDIF(WIN32)
 
 #Detect OpenMP
@@ -27,12 +32,17 @@ ADD_EXECUTABLE(KeyMatchFull KeyMatchFull.cpp keys2a.cpp)
 TARGET_LINK_LIBRARIES(KeyMatchFull ann_1.1_char zlib)
 
 ADD_EXECUTABLE(RadialUndistort RadialUndistort.cpp LoadJPEG.cpp)
+include_directories(${JPEG_INCLUDE_DIR})
 TARGET_LINK_LIBRARIES(RadialUndistort imagelib matrix ${JPEG_LIBRARY} ${MATH_LIBS})
 
 ADD_EXECUTABLE(Bundle2Vis Bundle2Vis.cpp)
 
 ADD_EXECUTABLE(Bundle2PMVS Bundle2PMVS.cpp LoadJPEG.cpp)
 TARGET_LINK_LIBRARIES(Bundle2PMVS imagelib matrix ${JPEG_LIBRARY} zlib ${MATH_LIBS})
+
+if (JPEG_FOUND)
+  include_directories(${JPEG_INCLUDE_DIRS})
+endif(JPEG_FOUND)
 
 SET(BUNDLER_SOURCES BaseApp.cpp BundlerApp.cpp keys.cpp Register.cpp Epipolar.cpp	
 	Bundle.cpp BundleFast.cpp MatchTracks.cpp Camera.cpp Geometry.cpp
@@ -46,5 +56,9 @@ SET_SOURCE_FILES_PROPERTIES(${BUNDLER_SOURCES}
 ADD_EXECUTABLE(Bundler ${BUNDLER_SOURCES})
 TARGET_LINK_LIBRARIES(Bundler imagelib sfm-driver sba-1.5 matrix zlib
  5point ${JPEG_LIBRARY} ann_1.1_char getopt ${MATH_LIBS})
+
+if (JPEG_FOUND)
+  include_directories(${JPEG_INCLUDE_DIRS})
+endif(JPEG_FOUND)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
