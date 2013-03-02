@@ -8,15 +8,7 @@
 $BIN_PATH = `dirname $0`;
 
 chomp($BIN_PATH);
-
-$OS = `uname -o`;
-chomp($OS);
-
-if ($OS eq "Cygwin") {
-    $JHEAD_EXE = "$BIN_PATH/jhead.exe";
-} else {
-    $JHEAD_EXE = "$BIN_PATH/jhead";
-}
+$JHEAD_EXE = "$BIN_PATH/jhead";
 
 $OUT_DIR = "./prepare";
 
