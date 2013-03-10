@@ -57,6 +57,8 @@ ADD_EXECUTABLE(Bundler ${BUNDLER_SOURCES})
 TARGET_LINK_LIBRARIES(Bundler imagelib sfm-driver sba-1.5 matrix zlib
  5point ${JPEG_LIBRARY} ann_1.1_char getopt ${MATH_LIBS})
 
+INSTALL(TARGETS Bundler DESTINATION bin)
+  
 if (JPEG_FOUND)
   include_directories(${JPEG_INCLUDE_DIRS})
 endif(JPEG_FOUND)

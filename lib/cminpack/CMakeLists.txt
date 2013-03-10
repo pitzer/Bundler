@@ -18,3 +18,7 @@ add_library (cminpack
   dogleg_.c fdjac1_.c hybrd_.c  lmder1_.c lmdif_.c  lmstr_.c  qrsolv_.c rwupdt_.c
   dpmpar_.c fdjac2_.c hybrj1_.c lmder_.c  lmpar_.c  qform_.c  r1mpyq_.c covar_.c
   )
+
+FILE(GLOB LIBRARY_FILES_H "./*.h")
+INSTALL(TARGETS cminpack DESTINATION lib)
+INSTALL(FILES ${LIBRARY_FILES_H} DESTINATION include)
