@@ -15,7 +15,7 @@ ELSE(WIN32)
     SET(MATH_LIBS cminpack -Wl,-framework -Wl,Accelerate)
   ELSE(APPLE)
     #Clapack stuff is not the same under unix system
-    SET(MATH_LIBS lapack cblas cminpack -lgfortran)
+    SET(MATH_LIBS lapack blas cblas cminpack -lgfortran)
   ENDIF(APPLE)
 ENDIF(WIN32)
 
@@ -52,7 +52,7 @@ SET(BUNDLER_SOURCES BaseApp.cpp BundlerApp.cpp keys.cpp Register.cpp Epipolar.cp
 	RelativePose.cpp Distortion.cpp TwoFrameModel.cpp LoadJPEG.cpp)
 SET_SOURCE_FILES_PROPERTIES(${BUNDLER_SOURCES}
   PROPERTIES
-  COMPILE_FLAGS "-D__NO_UI__ -D__BUNDLER__ -D__BUNDLER_DISTR__ -D_CRT_SECURE_NO_WARNINGS")
+  COMPILE_FLAGS "-D__NO_UI__ -D__BUNDLER__ -D__BUNDLER_DISTR__ -D_CRT_SECURE_NO_WARNINGS -Wno-write-strings -Wno-unused-result")
 ADD_EXECUTABLE(Bundler ${BUNDLER_SOURCES})
 TARGET_LINK_LIBRARIES(Bundler imagelib sfm-driver sba-1.5 matrix zlib
  5point ${JPEG_LIBRARY} ann_1.1_char getopt ${MATH_LIBS})
@@ -61,4 +61,3 @@ if (JPEG_FOUND)
   include_directories(${JPEG_INCLUDE_DIRS})
 endif(JPEG_FOUND)
 
-set(CMAKE_VERBOSE_MAKEFILE ON)

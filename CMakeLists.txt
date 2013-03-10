@@ -10,6 +10,9 @@ if(APPLE)
   add_definitions("-DMACOS")
 endif(APPLE)
 
+SET(CMAKE_CXX_FLAGS  "${CMAKE_CXX_FLAGS} -Wno-write-strings -Wno-unused-result -Wno-deprecated")
+SET(CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -Wno-write-strings -Wno-unused-result -Wno-deprecated")
+
 IF(WIN32)
 INCLUDE_DIRECTORIES(
 ./include
